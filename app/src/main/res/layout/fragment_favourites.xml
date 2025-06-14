@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.FavouritesFragment"
+    android:background="@color/white"> <!-- Use your defined colorBackground or @android:color/white -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFavourites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_contact" /> <!-- CHANGED THIS LINE TO item_contact -->
+
+    <TextView
+        android:id="@+id/tv_no_favorites_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No favorite contacts found."
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_centerInParent="true"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
+</RelativeLayout>

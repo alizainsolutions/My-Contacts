@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Contacts</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contact_photo_description">Contact Photo</string>
+    <string name="call_type_icon_description">Call Type Icon</string>
+    <string name="options_button_description">Options</string>
+    <string name="delete_call_log_entry">Delete</string>
+    <string name="dialer_description">Open Dialer</string>
+</resources>
