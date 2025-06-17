@@ -1,8 +1,7 @@
-package com.alizainsolutions.mycontacts;
+package com.shahzaib.mycontacts;
 
 import android.Manifest;
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.OperationApplicationException;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -94,8 +92,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
         // 2. Click listener: Toggle favorite status
         favouriteIcon.setOnClickListener(v -> {
-            if (contactId != null) {
-                toggleContactFavorite(contactId);
+            if (contactNumber != null) {
+                toggleContactFavorite(contactNumber);
             } else {
                 Toast.makeText(this, "Cannot set favorite: Contact ID is missing.", Toast.LENGTH_SHORT).show();
             }
@@ -143,8 +141,9 @@ public class ContactDetailsActivity extends AppCompatActivity {
             return false;
         }
 
-        Uri contactUri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
-                .appendPath(contactId).build();
+//        Uri contactUri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
+//                .appendPath(contactId).build();
+        Uri contactUri = getContactUriFromPhoneNumber(contactNumber);
 
         String[] projection = new String[]{ContactsContract.Contacts.STARRED};
         Cursor cursor = null;
@@ -185,8 +184,16 @@ public class ContactDetailsActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(ContactsContract.Contacts.STARRED, newStarredStatus);
 
-        Uri contactUri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
-                .appendPath(contactId).build();
+//        Uri contactUri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
+//                .appendPath(contactId).build();
+
+        Uri contactUri = getContactUriFromPhoneNumber(contactNumber);
+        if (contactUri == null) {
+            Toast.makeText(this, "Contact not found or not editable", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
 
         int rowsAffected = 0;
         try {
@@ -207,7 +214,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
      * Updates the favorite icon based on the current favorite status of the contact.
      */
     private void updateFavoriteIcon() {
-        if (contactId != null && isContactFavorite(contactId)) {
+        if (isContactFavorite(contactNumber)) {
             favouriteIcon.setImageResource(R.drawable.favourite_true);
         } else {
             favouriteIcon.setImageResource(R.drawable.favourite_false); // You need a favourite_false drawable
@@ -287,5 +294,25 @@ public class ContactDetailsActivity extends AppCompatActivity {
                 Toast.makeText(this, "WRITE_CONTACTS permission denied. Cannot modify contacts.", Toast.LENGTH_SHORT).show();
             }
         }
+
     }
+
+
+
+    private Uri getContactUriFromPhoneNumber(String phoneNumber) {
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = getContentResolver().query(uri,
+                new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.LOOKUP_KEY},
+                null, null, null);
+
+        Uri contactUri = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            String lookupKey = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
+            contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+            cursor.close();
+        }
+        return contactUri;
+    }
+
+
 }

@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Adapter;
+package com.shahzaib.mycontacts.Adapter;
 
 
 import androidx.annotation.NonNull;
@@ -6,9 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.alizainsolutions.mycontacts.Fragments.FavouritesFragment;
-import com.alizainsolutions.mycontacts.Fragments.HomeFragment;
-import com.alizainsolutions.mycontacts.Fragments.RecentsFragment;
+import com.shahzaib.mycontacts.Fragments.FavouritesFragment;
+import com.shahzaib.mycontacts.Fragments.HomeFragment;
+import com.shahzaib.mycontacts.Fragments.RecentsFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 

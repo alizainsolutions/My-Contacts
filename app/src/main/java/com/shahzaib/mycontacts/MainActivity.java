@@ -1,16 +1,11 @@
-package com.alizainsolutions.mycontacts;
+package com.shahzaib.mycontacts;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.TelecomManager; // This import might not be necessary if not used
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.alizainsolutions.mycontacts.Adapter.ViewPagerAdapter;
-import com.alizainsolutions.mycontacts.Fragments.HomeFragment;
-import com.alizainsolutions.mycontacts.Fragments.FavouritesFragment;
-import com.alizainsolutions.mycontacts.Fragments.RecentsFragment;
+import com.shahzaib.mycontacts.Adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -19,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private ViewPagerAdapter adapter;
+    private int lastSelectedTabIndex = 1;
+
 
     // Define the index for the Contacts tab
     private static final int CONTACTS_TAB_INDEX = 1; // "Contacts" is at index 2 in your tabTitles array
@@ -35,11 +32,16 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ViewPagerAdapter(this);
         viewPager.setUserInputEnabled(false);
+        // Set the current item to the Contacts tab whenever MainActivity resumes
+
         viewPager.setAdapter(adapter);
+
+
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             tab.setText(tabTitles[position]);
         }).attach();
+
     }
 
     @Override
@@ -48,7 +50,17 @@ public class MainActivity extends AppCompatActivity {
         // Set the current item to the Contacts tab whenever MainActivity resumes
         if (viewPager != null) {
             // Use false for smoothScroll to switch immediately without animation
-            viewPager.setCurrentItem(CONTACTS_TAB_INDEX, false);
+//            viewPager.setCurrentItem(CONTACTS_TAB_INDEX, false);
+            viewPager.setCurrentItem(lastSelectedTabIndex, false);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (viewPager != null) {
+            lastSelectedTabIndex = viewPager.getCurrentItem();
+        }
+    }
+
 }

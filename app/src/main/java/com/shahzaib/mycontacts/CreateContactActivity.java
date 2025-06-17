@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts;
+package com.shahzaib.mycontacts;
 
 import android.Manifest;
 import android.content.ContentProviderOperation;
@@ -45,13 +45,13 @@ public class CreateContactActivity extends AppCompatActivity {
             }
             if(recentNumber != null){
                 editTextPhone.setText(recentNumber);
-                btnCall.setVisibility(View.VISIBLE);
-                btnCall.setOnClickListener(v ->{
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + recentNumber));
-                    startActivity(callIntent);
-
-                });
+//                btnCall.setVisibility(View.VISIBLE);
+//                btnCall.setOnClickListener(v ->{
+//                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+//                    callIntent.setData(Uri.parse("tel:" + recentNumber));
+//                    startActivity(callIntent);
+//
+//                });
             }
 
             editTextPhone.setText(recentNumber);

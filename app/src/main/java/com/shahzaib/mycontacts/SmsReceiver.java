@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts;
+package com.shahzaib.mycontacts;
 
 
 

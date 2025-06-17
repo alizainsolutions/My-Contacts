@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Model;
+package com.shahzaib.mycontacts.Model;
 
 
 

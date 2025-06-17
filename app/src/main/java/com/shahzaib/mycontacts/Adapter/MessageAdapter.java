@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Adapter;
+package com.shahzaib.mycontacts.Adapter;
 
 
 import android.content.Context;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.Model.MessageModel;
-import com.alizainsolutions.mycontacts.R;
+import com.shahzaib.mycontacts.Model.MessageModel;
+import com.shahzaib.mycontacts.R;
 
 import java.util.List;
 

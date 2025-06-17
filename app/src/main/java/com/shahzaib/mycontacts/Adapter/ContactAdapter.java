@@ -1,11 +1,15 @@
-package com.alizainsolutions.mycontacts.Adapter;
+package com.shahzaib.mycontacts.Adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +17,25 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.ContactDetailsActivity;
-import com.alizainsolutions.mycontacts.Model.ContactModel;
-import com.alizainsolutions.mycontacts.R;
+import com.shahzaib.mycontacts.ContactDetailsActivity;
+import com.shahzaib.mycontacts.CreateContactActivity;
+import com.shahzaib.mycontacts.MessageActivity;
+import com.shahzaib.mycontacts.Model.ContactModel;
+import com.shahzaib.mycontacts.R;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.nativead.MediaView;
-import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 
 import java.util.ArrayList;
@@ -42,6 +50,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final List<Object> mixedList = new ArrayList<>();
     private final List<ContactModel> originalList;
     private List<ContactModel> filteredList;
+    private SparseBooleanArray expandedPositions = new SparseBooleanArray();
 
     public ContactAdapter(Context context, List<ContactModel> contactList) {
         this.context = context;
@@ -54,12 +63,20 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView imageView, ivOptions;
         TextView tvName, tvNumber;
 
+        LinearLayout additionalOptions;
+        ImageView makeCall, doMessage, edit;
+
         public ContactViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             ivOptions = itemView.findViewById(R.id.ivOptions);
             tvName = itemView.findViewById(R.id.tvName);
             tvNumber = itemView.findViewById(R.id.tvNumber);
+
+            additionalOptions = itemView.findViewById(R.id.callLogAdditionalBtn);
+            makeCall = itemView.findViewById(R.id.makeCallIV);
+            doMessage = itemView.findViewById(R.id.doMessageIV);
+            edit = itemView.findViewById(R.id.editIV);
         }
     }
 
@@ -121,15 +138,64 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 popup.show();
             });
 
-            viewHolder.itemView.setOnClickListener(v -> {
-                int currentPosition = holder.getAdapterPosition();
-                ContactModel clickedContact = (ContactModel) mixedList.get(currentPosition);
+            int currentPosition = holder.getAdapterPosition();
+            ContactModel clickedContact = (ContactModel) mixedList.get(currentPosition);
+
+            // Show/hide hidden view based on expanded state
+            boolean isExpanded = expandedPositions.get(position, false);
+//        holder.addToContacts.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            viewHolder.additionalOptions.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+
+            viewHolder.makeCall.setOnClickListener(v -> {
+                makePhoneCall(clickedContact.getPhoneNumber());
+            });
+            viewHolder.doMessage.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("contact_number", clickedContact.getPhoneNumber());
+                intent.putExtra("contact_name", clickedContact.getName());
+                intent.putExtra("contact_id", clickedContact.getId());
+                intent.putExtra("contact_image", clickedContact.getPhotoUri());
+                context.startActivity(intent);
+            });
+
+            viewHolder.edit.setOnClickListener(v ->{
                 Intent intent = new Intent(context, ContactDetailsActivity.class);
                 intent.putExtra("name", clickedContact.getName());
                 intent.putExtra("number", clickedContact.getPhoneNumber());
                 intent.putExtra("photoUri", clickedContact.getPhotoUri());
                 intent.putExtra("id", clickedContact.getId());
                 context.startActivity(intent);
+            });
+
+
+
+
+
+
+            viewHolder.itemView.setOnClickListener(v -> {
+//                int currentPosition = holder.getAdapterPosition();
+//                ContactModel clickedContact = (ContactModel) mixedList.get(currentPosition);
+
+
+                // Collapse previous expanded if any
+                int previouslyExpanded = findPreviouslyExpanded();
+                if (previouslyExpanded != -1 && previouslyExpanded != position) {
+                    expandedPositions.put(previouslyExpanded, false);
+                    notifyItemChanged(previouslyExpanded);
+                }
+
+                // Toggle current
+                boolean currentState = expandedPositions.get(position, false);
+                expandedPositions.put(position, !currentState);
+                notifyItemChanged(position);
+
+//                Intent intent = new Intent(context, ContactDetailsActivity.class);
+//                intent.putExtra("name", clickedContact.getName());
+//                intent.putExtra("number", clickedContact.getPhoneNumber());
+//                intent.putExtra("photoUri", clickedContact.getPhotoUri());
+//                intent.putExtra("id", clickedContact.getId());
+//                context.startActivity(intent);
             });
 
         } else if (holder instanceof AdViewHolder) {
@@ -256,5 +322,24 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public ContactModel getContactAtPosition(int position) {
         Object item = mixedList.get(position);
         return item instanceof ContactModel ? (ContactModel) item : null;
+    }
+
+    private int findPreviouslyExpanded() {
+        for (int i = 0; i < expandedPositions.size(); i++) {
+            if (expandedPositions.valueAt(i)) {
+                return expandedPositions.keyAt(i);
+            }
+        }
+        return -1;
+    }
+    private void makePhoneCall(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + number));
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            context.startActivity(callIntent);
+        } else {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CALL_PHONE}, 1);
+        }
     }
 }

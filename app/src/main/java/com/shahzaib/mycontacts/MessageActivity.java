@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts;
+package com.shahzaib.mycontacts;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -15,7 +15,6 @@ import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -27,8 +26,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.Adapter.MessageAdapter;
-import com.alizainsolutions.mycontacts.Model.MessageModel;
+import com.shahzaib.mycontacts.Adapter.MessageAdapter;
+import com.shahzaib.mycontacts.Model.MessageModel;
 
 import java.util.ArrayList;
 import java.util.Collections;

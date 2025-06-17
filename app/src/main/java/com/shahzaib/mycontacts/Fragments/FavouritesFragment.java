@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Fragments;
+package com.shahzaib.mycontacts.Fragments;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -26,10 +26,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.Adapter.FavouriteContactAdapter;
-import com.alizainsolutions.mycontacts.ContactDetailsActivity;
-import com.alizainsolutions.mycontacts.Model.ContactModel;
-import com.alizainsolutions.mycontacts.R;
+import com.shahzaib.mycontacts.Adapter.FavouriteContactAdapter;
+import com.shahzaib.mycontacts.ContactDetailsActivity;
+import com.shahzaib.mycontacts.Model.ContactModel;
+import com.shahzaib.mycontacts.R;
 
 import java.util.ArrayList;
 import java.util.List;

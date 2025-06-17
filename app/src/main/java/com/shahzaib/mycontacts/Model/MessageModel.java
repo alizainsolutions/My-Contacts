@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Model;
+package com.shahzaib.mycontacts.Model;
 public class MessageModel {
     private String message;
     private long timestamp;

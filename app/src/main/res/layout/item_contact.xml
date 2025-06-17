@@ -9,9 +9,14 @@
     android:foreground="?attr/selectableItemBackground"
     android:elevation="4dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:padding="10dp">
 
         <ImageView
@@ -57,5 +62,40 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@drawable/menu_dots" />
+
     </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/callLogAdditionalBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/call"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:id="@+id/makeCallIV"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/messages"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:id="@+id/doMessageIV"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/edit"
+                android:clickable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:layout_weight="1"
+                android:id="@+id/editIV"/>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

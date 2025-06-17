@@ -1,24 +1,32 @@
-package com.alizainsolutions.mycontacts.Adapter;
+package com.shahzaib.mycontacts.Adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.CallLog;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.CreateContactActivity;
-import com.alizainsolutions.mycontacts.Model.CallLogModel;
-import com.alizainsolutions.mycontacts.R;
+import com.shahzaib.mycontacts.ContactDetailsActivity;
+import com.shahzaib.mycontacts.CreateContactActivity;
+import com.shahzaib.mycontacts.MessageActivity;
+import com.shahzaib.mycontacts.Model.CallLogModel;
+import com.shahzaib.mycontacts.R;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
@@ -37,6 +45,7 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
     private Context context;
     private List<CallLogModel> callLogList;
     private OnCallLogInteractionListener listener;
+    private SparseBooleanArray expandedPositions = new SparseBooleanArray();
 
     public interface OnCallLogInteractionListener {
         void onCallLogClick(CallLogModel callLog);
@@ -137,15 +146,73 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             }
         }
 
+        // Show/hide hidden view based on expanded state
+        boolean isExpanded = expandedPositions.get(position, false);
+//        holder.addToContacts.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.additionalOptions.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+        holder.addToContacts.setVisibility(
+                (callLog.getName() == null || callLog.getName().trim().isEmpty()) && isExpanded
+                        ? View.VISIBLE
+                        : View.GONE
+        );
+
+        holder.addToContacts.setOnClickListener(v ->{
+            Intent intent = new Intent(context, CreateContactActivity.class);
+            intent.putExtra("recentName", callLog.getName());
+            intent.putExtra("recentNumber", callLog.getNumber());
+            context.startActivity(intent);
+        });
+        holder.makeCall.setOnClickListener(v -> {
+           makePhoneCall(callLog.getNumber());
+        });
+        holder.doMessage.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MessageActivity.class);
+            intent.putExtra("contact_number", callLog.getNumber());
+            intent.putExtra("contact_name", callLog.getName());
+            intent.putExtra("contact_id", callLog.getContactId());
+            intent.putExtra("contact_image", callLog.getPhotoUri());
+           context.startActivity(intent);
+        });
+
+        holder.edit.setOnClickListener(v ->{
+            Intent intent = new Intent(context, ContactDetailsActivity.class);
+            intent.putExtra("name", callLog.getName());
+            intent.putExtra("number", callLog.getNumber());
+            intent.putExtra("photoUri", callLog.getPhotoUri());
+            intent.putExtra("id", callLog.getCallLogId());
+            context.startActivity(intent);
+        });
+
 
         holder.itemView.setOnClickListener(v -> {
 //            if (listener != null) {
 //                listener.onCallLogClick(callLog);
 //            }
-            Intent intent = new Intent(context, CreateContactActivity.class);
-            intent.putExtra("recentName", callLog.getName());
-            intent.putExtra("recentNumber", callLog.getNumber());
-            context.startActivity(intent);
+//            Intent intent = new Intent(context, CreateContactActivity.class);
+//            intent.putExtra("recentName", callLog.getName());
+//            intent.putExtra("recentNumber", callLog.getNumber());
+//            context.startActivity(intent);
+
+
+
+
+            // Collapse previous expanded if any
+            int previouslyExpanded = findPreviouslyExpanded();
+            if (previouslyExpanded != -1 && previouslyExpanded != position) {
+                expandedPositions.put(previouslyExpanded, false);
+                notifyItemChanged(previouslyExpanded);
+            }
+
+            // Toggle current
+            boolean currentState = expandedPositions.get(position, false);
+            expandedPositions.put(position, !currentState);
+            notifyItemChanged(position);
+
+
+
+
+
         });
 
         holder.ivOptions.setOnClickListener(v -> {
@@ -293,6 +360,8 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         CircleImageView ivPhoto;
         TextView tvNameNumber, tvTypeLabel, tvTime, tvDuration;
         ImageView ivTypeIcon, ivOptions;
+        LinearLayout addToContacts, additionalOptions;
+        ImageView makeCall, doMessage, edit;
 
         public CallLogViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -303,6 +372,13 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             tvTime = itemView.findViewById(R.id.tv_call_log_time);
             tvDuration = itemView.findViewById(R.id.tv_call_log_duration);
             ivOptions = itemView.findViewById(R.id.iv_call_log_options);
+            addToContacts = itemView.findViewById(R.id.addToContactsLL);
+
+            additionalOptions = itemView.findViewById(R.id.callLogAdditionalBtn);
+            makeCall = itemView.findViewById(R.id.makeCallIV);
+            doMessage = itemView.findViewById(R.id.doMessageIV);
+            edit = itemView.findViewById(R.id.editIV);
+
         }
     }
 
@@ -311,6 +387,24 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             callLogList.clear();
             notifyDataSetChanged();
             Log.d(TAG, "clearAll: Adapter data cleared.");
+        }
+    }
+    private int findPreviouslyExpanded() {
+        for (int i = 0; i < expandedPositions.size(); i++) {
+            if (expandedPositions.valueAt(i)) {
+                return expandedPositions.keyAt(i);
+            }
+        }
+        return -1;
+    }
+    private void makePhoneCall(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + number));
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            context.startActivity(callIntent);
+        } else {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CALL_PHONE}, 1);
         }
     }
 }

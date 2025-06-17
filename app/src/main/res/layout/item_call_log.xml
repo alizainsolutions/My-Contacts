@@ -15,6 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/previousUI"
         android:padding="12dp">
 
         <!-- Contact Image -->
@@ -126,4 +127,69 @@
             app:tint="@android:color/darker_gray" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addToContactsLL"
+            android:clickable="true"
+            android:foreground="?attr/actionBarItemBackground"
+            android:visibility="gone"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:textColor="#036812"
+                android:textStyle="bold"
+                android:text="Add to Contacts"
+                android:textSize="12sp"/>
+            <ImageView
+                android:layout_width="15sp"
+                android:layout_height="15dp"
+                android:src="@drawable/plus_green_ic"
+                android:layout_marginStart="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/callLogAdditionalBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/call"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:id="@+id/makeCallIV"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/messages"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:id="@+id/doMessageIV"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/edit"
+                android:clickable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:layout_weight="1"
+                android:id="@+id/editIV"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

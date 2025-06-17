@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Fragments;
+package com.shahzaib.mycontacts.Fragments;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -28,11 +28,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.Adapter.ContactAdapter; // Ensure this import is correct
-import com.alizainsolutions.mycontacts.CreateContactActivity;
-import com.alizainsolutions.mycontacts.MessageActivity;
-import com.alizainsolutions.mycontacts.Model.ContactModel; // Ensure this import is correct
-import com.alizainsolutions.mycontacts.R;
+import com.shahzaib.mycontacts.Adapter.ContactAdapter; // Ensure this import is correct
+import com.shahzaib.mycontacts.CreateContactActivity;
+import com.shahzaib.mycontacts.MessageActivity;
+import com.shahzaib.mycontacts.Model.ContactModel; // Ensure this import is correct
+import com.shahzaib.mycontacts.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

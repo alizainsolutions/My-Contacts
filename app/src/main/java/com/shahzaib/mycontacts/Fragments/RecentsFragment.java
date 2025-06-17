@@ -1,4 +1,4 @@
-package com.alizainsolutions.mycontacts.Fragments;
+package com.shahzaib.mycontacts.Fragments;
 
 
 import android.Manifest;
@@ -32,12 +32,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alizainsolutions.mycontacts.Adapter.CallLogAdapter;
+import com.shahzaib.mycontacts.Adapter.CallLogAdapter;
 
-import com.alizainsolutions.mycontacts.CustomDialerActivity;
-import com.alizainsolutions.mycontacts.MessageActivity;
-import com.alizainsolutions.mycontacts.Model.CallLogModel;
-import com.alizainsolutions.mycontacts.R;
+import com.shahzaib.mycontacts.CustomDialerActivity;
+import com.shahzaib.mycontacts.MessageActivity;
+import com.shahzaib.mycontacts.Model.CallLogModel;
+import com.shahzaib.mycontacts.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
